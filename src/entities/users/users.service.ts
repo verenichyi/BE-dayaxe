@@ -33,6 +33,10 @@ export class UsersService {
   }
 
   async deleteUser(userId: string): Promise<UserEntity> {
+    if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
+      throw new NotFoundException();
+    }
+
     const deletedUser = await this.userModel.findByIdAndDelete(userId);
     if (!deletedUser) {
       throw new NotFoundException(`User #${userId} not found`);
@@ -44,6 +48,9 @@ export class UsersService {
     userId: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
+    if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
+      throw new NotFoundException();
+    }
     const existingUser = await this.userModel.findByIdAndUpdate(
       userId,
       updateUserDto,

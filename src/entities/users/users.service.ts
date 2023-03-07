@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './types/user.entity';
 import { User, UserDocument } from './user.schema';
 
@@ -23,5 +24,10 @@ export class UsersService {
       throw new NotFoundException();
     }
     return user;
+  }
+
+  async createUser(body: CreateUserDto): Promise<UserEntity> {
+    const newUser = await new this.userModel(body);
+    return newUser.save();
   }
 }

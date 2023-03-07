@@ -1,7 +1,21 @@
-import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserEntity } from './types/user.entity';
-import { ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -29,5 +43,15 @@ export class UsersController {
   @Get(':id')
   async getUserById(@Param('id') id: string): Promise<UserEntity> {
     return await this.usersService.findById(id);
+  }
+
+  @ApiCreatedResponse({ type: UserEntity })
+  @ApiBadRequestResponse({
+    status: 400,
+    description: 'Invalid input',
+  })
+  @Post()
+  async createUser(@Body() body: CreateUserDto): Promise<UserEntity> {
+    return await this.usersService.createUser(body);
   }
 }

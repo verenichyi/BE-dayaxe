@@ -1,11 +1,14 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
   Post,
+  Put,
+  Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserEntity } from './types/user.entity';
@@ -16,6 +19,7 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -53,5 +57,38 @@ export class UsersController {
   @Post()
   async createUser(@Body() body: CreateUserDto): Promise<UserEntity> {
     return await this.usersService.createUser(body);
+  }
+
+  @Delete('/:id')
+  async deleteUser(@Res() response, @Param('id') userId: string) {
+    try {
+      const deletedUser = await this.usersService.deleteUser(userId);
+      return response.status(HttpStatus.OK).json({
+        message: 'User deleted successfully',
+        deletedUser,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Put('/:id')
+  async updateUser(
+    @Res() response,
+    @Param('id') userId: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    try {
+      const existingUser = await this.usersService.updateUser(
+        userId,
+        updateUserDto,
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'User has been successfully updated',
+        existingUser,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 }

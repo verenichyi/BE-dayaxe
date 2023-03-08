@@ -6,7 +6,7 @@ export class UserEntity {
   _id: Types.ObjectId;
 
   @ApiProperty({ example: 'Hans' })
-  name: string;
+  username: string;
 
   @ApiProperty({ example: 'hans@mail.ru' })
   email: string;

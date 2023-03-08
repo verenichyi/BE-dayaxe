@@ -55,7 +55,7 @@ export class UsersController {
       example: {
         status: 400,
         message: [
-          'name: name must be longer than or equal to 3 characters, name must be a string',
+          'username: username must be longer than or equal to 3 characters, username must be a string',
           'password: password must be longer than or equal to 4 characters, password should not be empty',
           'email: email must be an email',
         ],
@@ -87,10 +87,7 @@ export class UsersController {
   async deleteUser(@Res() response, @Param('id') userId: string) {
     try {
       const deletedUser = await this.usersService.deleteUser(userId);
-      return response.status(HttpStatus.OK).json({
-        message: 'User deleted successfully',
-        deletedUser,
-      });
+      return response.status(HttpStatus.OK).json(deletedUser);
     } catch (err) {
       return response.status(err.status).json(err.response);
     }
@@ -116,7 +113,7 @@ export class UsersController {
       example: {
         status: 400,
         message: [
-          'name: name must be longer than or equal to 3 characters, name must be a string',
+          'username: username must be longer than or equal to 3 characters, username must be a string',
           'password: password must be longer than or equal to 4 characters, password should not be empty',
           'email: email must be an email',
         ],
@@ -136,10 +133,7 @@ export class UsersController {
         userId,
         updateUserDto,
       );
-      return response.status(HttpStatus.OK).json({
-        message: 'User has been successfully updated',
-        existingUser,
-      });
+      return response.status(HttpStatus.OK).json(existingUser);
     } catch (err) {
       return response.status(err.status).json(err.response);
     }

@@ -110,6 +110,21 @@ export class UsersController {
     },
     description: 'User was not found',
   })
+  @ApiBadRequestResponse({
+    schema: {
+      type: 'object',
+      example: {
+        status: 400,
+        message: [
+          'name: name must be longer than or equal to 3 characters, name must be a string',
+          'password: password must be longer than or equal to 4 characters, password should not be empty',
+          'email: email must be an email',
+        ],
+        error: 'Bad Request',
+      },
+    },
+    description: 'Invalid input',
+  })
   @Put('/:id')
   async updateUser(
     @Res() response,

@@ -38,8 +38,7 @@ export class UsersController {
       type: 'object',
       example: {
         status: 404,
-        message: 'string',
-        error: 'Not Found',
+        message: 'Not Found',
       },
     },
     description: 'User was not found',
@@ -51,7 +50,18 @@ export class UsersController {
 
   @ApiCreatedResponse({ type: UserEntity })
   @ApiBadRequestResponse({
-    status: 400,
+    schema: {
+      type: 'object',
+      example: {
+        status: 400,
+        message: [
+          'name: name must be longer than or equal to 3 characters, name must be a string',
+          'password: password must be longer than or equal to 4 characters, password should not be empty',
+          'email: email must be an email',
+        ],
+        error: 'Bad Request',
+      },
+    },
     description: 'Invalid input',
   })
   @Post()
@@ -59,6 +69,20 @@ export class UsersController {
     return await this.usersService.createUser(body);
   }
 
+  @ApiOkResponse({
+    type: UserEntity,
+    description: 'User was successfully deleted',
+  })
+  @ApiNotFoundResponse({
+    schema: {
+      type: 'object',
+      example: {
+        status: 404,
+        message: 'Not Found',
+      },
+    },
+    description: 'User was not found',
+  })
   @Delete('/:id')
   async deleteUser(@Res() response, @Param('id') userId: string) {
     try {
@@ -72,6 +96,20 @@ export class UsersController {
     }
   }
 
+  @ApiOkResponse({
+    type: UserEntity,
+    description: 'User has been  successfully updated',
+  })
+  @ApiNotFoundResponse({
+    schema: {
+      type: 'object',
+      example: {
+        status: 404,
+        message: 'Not Found',
+      },
+    },
+    description: 'User was not found',
+  })
   @Put('/:id')
   async updateUser(
     @Res() response,

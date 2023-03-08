@@ -2,15 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Types } from 'mongoose';
 
 export class UserEntity {
-  @ApiProperty()
+  @ApiProperty({ example: '6407588c77660290910cfd16' })
   _id: Types.ObjectId;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Hans' })
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'hans@mail.ru' })
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '1234qaz' })
   password: string;
 }

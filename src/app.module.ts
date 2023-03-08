@@ -13,7 +13,7 @@ config();
       envFilePath: '.env',
     }),
     MongooseModule.forRoot(process.env.MONGODB_URI),
-    UsersModule
+    UsersModule,
   ],
 })
 export class AppModule {}

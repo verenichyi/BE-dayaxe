@@ -1,43 +1,6 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
-import { HydratedDocument, Document } from 'mongoose';
-import { Access, AccessType } from './types/userTypes';
-
-// @Schema({ versionKey: false, _id: false })
-// class AccessDocument extends Document {
-//   @Prop({ type: [String], required: false })
-//   '0': 'delete';
-
-//   @Prop({ type: [String], required: false })
-//   '1': 'read';
-
-//   @Prop({ type: [String], required: false })
-//   '2': 'create';
-
-//   @Prop({ type: [String], required: false })
-//   '3': 'update';
-// }
-
-// const AccessSchema = SchemaFactory.createForClass(AccessDocument);
-
-// @Schema({ versionKey: false, _id: false })
-// class ModulesDocument extends Document {
-//   @Prop({ type: [String], required: true })
-//   'Users': AccessType[];
-
-//   @Prop({ type: [String], required: true })
-//   'Daycation': AccessType[];
-
-//   @Prop({ type: [String], required: true })
-//   'Hotel Passes': AccessType[];
-
-//   @Prop({ type: [String], required: true })
-//   'Moments': AccessType[];
-
-//   @Prop({ type: [String], required: true })
-//   'Promotions': AccessType[];
-// }
-
-// const ModulesSchema = SchemaFactory.createForClass(ModulesDocument);
+import { HydratedDocument } from 'mongoose';
+import { Access } from './types/userTypes';
 
 @Schema({ versionKey: false })
 export class User {
@@ -54,46 +17,52 @@ export class User {
     type: raw({
       Users: {
         type: [
-          { type: String },
-          { type: String },
-          { type: String },
-          { type: String },
+          { type: String, required: false },
+          { type: String, required: false },
+          { type: String, required: false },
+          { type: String, required: false },
         ],
+        required: true,
       },
       Daycation: {
         type: [
-          { type: String },
-          { type: String },
-          { type: String },
-          { type: String },
+          { type: String, required: false },
+          { type: String, required: false },
+          { type: String, required: false },
+          { type: String, required: false },
         ],
+        required: true,
       },
       'Hotel Passes': {
         type: [
-          { type: String },
-          { type: String },
-          { type: String },
-          { type: String },
+          { type: String, required: false },
+          { type: String, required: false },
+          { type: String, required: false },
+          { type: String, required: false },
         ],
+        required: true,
       },
       Moments: {
         type: [
-          { type: String },
-          { type: String },
-          { type: String },
-          { type: String },
+          { type: String, required: false },
+          { type: String, required: false },
+          { type: String, required: false },
+          { type: String, required: false },
         ],
+        required: true,
       },
       Promotions: {
         type: [
-          { type: String },
-          { type: String },
-          { type: String },
-          { type: String },
+          { type: String, required: false },
+          { type: String, required: false },
+          { type: String, required: false },
+          { type: String, required: false },
         ],
+        required: true,
       },
     }),
     required: true,
+    versionKey: false,
   })
   access: Access;
 }

@@ -15,7 +15,7 @@ export function isIdValid(id: string): void | never {
   }
 }
 
-export async function checkForDatabaseMatches(
+export async function checkNewUserForDatabaseMatches(
   body: CreateUserDto | UpdateUserDto,
   userModel: Model<UserDocument>,
 ): Promise<void | never> {
@@ -25,13 +25,39 @@ export async function checkForDatabaseMatches(
   if (userByName) {
     throw new ConflictException({
       status: 409,
-      message: 'a user with the same name already exists',
+      message: 'a user with the same username already exists',
       error: 'Conflict',
     });
   }
 
   const userByEmail = await userModel.findOne({ email: body.email });
   if (userByEmail) {
+    throw new ConflictException({
+      status: 409,
+      message: 'a user with the same email already exists',
+      error: 'Conflict',
+    });
+  }
+}
+
+export async function checkUpdatedUserForDatabaseMatches(
+  body: CreateUserDto | UpdateUserDto,
+  userModel: Model<UserDocument>,
+  userId: string,
+): Promise<void | never> {
+  const userByName = await userModel.findOne({
+    username: body.username,
+  });
+  if (userByName && userByName._id.toString() !== userId) {
+    throw new ConflictException({
+      status: 409,
+      message: 'a user with the same username already exists',
+      error: 'Conflict',
+    });
+  }
+
+  const userByEmail = await userModel.findOne({ email: body.email });
+  if (userByEmail && userByEmail._id.toString() !== userId) {
     throw new ConflictException({
       status: 409,
       message: 'a user with the same email already exists',

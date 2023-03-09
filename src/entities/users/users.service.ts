@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { isIdValid } from 'src/helpers/validation';
@@ -27,6 +31,26 @@ export class UsersService {
   }
 
   async createUser(body: CreateUserDto): Promise<UserEntity> {
+    const userByName = await this.userModel.findOne({
+      username: body.username,
+    });
+    if (userByName) {
+      throw new ConflictException({
+        status: 409,
+        message: 'a user with the same name already exists',
+        error: 'Conflict',
+      });
+    }
+
+    const userByEmail = await this.userModel.findOne({ email: body.email });
+    if (userByEmail) {
+      throw new ConflictException({
+        status: 409,
+        message: 'a user with the same email already exists',
+        error: 'Conflict',
+      });
+    }
+
     const newUser = await new this.userModel(body);
     return newUser.save();
   }

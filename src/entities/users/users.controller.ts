@@ -14,6 +14,7 @@ import { UsersService } from './users.service';
 import { UserEntity } from './types/user.entity';
 import {
   ApiBadRequestResponse,
+  ApiConflictResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -75,6 +76,17 @@ export class UsersController {
       },
     },
     description: 'Invalid input',
+  })
+  @ApiConflictResponse({
+    schema: {
+      type: 'object',
+      example: {
+        status: 409,
+        message: 'a user with the same field already exists',
+        error: 'Conflict',
+      },
+    },
+    description: 'Conflicting Request',
   })
   @Post()
   async createUser(@Body() body: CreateUserDto): Promise<UserEntity> {

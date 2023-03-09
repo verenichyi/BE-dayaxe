@@ -15,6 +15,14 @@ export class UserEntity {
   @ApiProperty({ example: '1234qaz' })
   password: string;
 
-  @ApiProperty({ example: 'hans@mail.ru' })
-  accessLvl: Access;
+  @ApiProperty({
+    example: {
+      Users: ['read', 'update'],
+      Daycation: ['read', 'update'],
+      'Hotel Passes': ['read', 'update'],
+      Moments: ['read', 'update'],
+      Promotions: ['read', 'update'],
+    },
+  })
+  access: Access;
 }

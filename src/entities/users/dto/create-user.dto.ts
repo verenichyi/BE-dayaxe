@@ -20,8 +20,14 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 'hans@mail.ru' })
-  @IsNotEmpty()
-  @IsString()
-  accessLvl: Access;
+  @ApiProperty({
+    example: {
+      Users: ['read', 'update'],
+      Daycation: ['read', 'update'],
+      'Hotel Passes': ['read', 'update'],
+      Moments: ['read', 'update'],
+      Promotions: ['read', 'update'],
+    },
+  })
+  access: Access;
 }

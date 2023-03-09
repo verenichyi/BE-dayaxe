@@ -1,12 +1,12 @@
 enum Modules {
-  USERS = 'users',
-  DAYCATION = 'daycation',
-  HOTEL_PASSES = 'hotelPasses',
-  MOMENTS = 'moments',
-  PROMOTIONS = 'promotions',
+  USERS = 'Users',
+  DAYCATION = 'Daycation',
+  HOTEL_PASSES = 'Hotel Passes',
+  MOMENTS = 'Moments',
+  PROMOTIONS = 'Promotions',
 }
 
-type AccessType = 'create' | 'read' | 'update' | 'delete';
+export type AccessType = 'create' | 'read' | 'update' | 'delete';
 
 export type Access = {
   [module in Modules]: AccessType[];

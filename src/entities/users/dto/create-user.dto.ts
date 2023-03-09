@@ -20,7 +20,8 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  // @IsNotEmpty()
-  // @IsString()
-  // accessLvl: Access;
+  @ApiProperty({ example: 'hans@mail.ru' })
+  @IsNotEmpty()
+  @IsString()
+  accessLvl: Access;
 }

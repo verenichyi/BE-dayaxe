@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Types } from 'mongoose';
+import { Access } from './userTypes';
 
 export class UserEntity {
   @ApiProperty({ example: '6407588c77660290910cfd16' })
@@ -13,4 +14,7 @@ export class UserEntity {
 
   @ApiProperty({ example: '1234qaz' })
   password: string;
+
+  @ApiProperty({ example: 'hans@mail.ru' })
+  accessLvl: Access;
 }

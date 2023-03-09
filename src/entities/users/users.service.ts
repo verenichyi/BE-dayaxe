@@ -1,11 +1,10 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { isIdValid } from 'src/helpers/validation';
+import {
+  checkForDatabaseMatches,
+  isIdValid,
+} from 'src/entities/users/helpers/validation';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './types/user.entity';
@@ -31,33 +30,13 @@ export class UsersService {
   }
 
   async createUser(body: CreateUserDto): Promise<UserEntity> {
-    const userByName = await this.userModel.findOne({
-      username: body.username,
-    });
-    if (userByName) {
-      throw new ConflictException({
-        status: 409,
-        message: 'a user with the same name already exists',
-        error: 'Conflict',
-      });
-    }
-
-    const userByEmail = await this.userModel.findOne({ email: body.email });
-    if (userByEmail) {
-      throw new ConflictException({
-        status: 409,
-        message: 'a user with the same email already exists',
-        error: 'Conflict',
-      });
-    }
-
+    await checkForDatabaseMatches(body, this.userModel);
     const newUser = await new this.userModel(body);
     return newUser.save();
   }
 
   async deleteUser(userId: string): Promise<UserEntity> {
     isIdValid(userId);
-
     const deletedUser = await this.userModel.findByIdAndDelete(userId);
     if (!deletedUser) {
       throw new NotFoundException(`User ${userId} not found`);
@@ -70,6 +49,8 @@ export class UsersService {
     updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
     isIdValid(userId);
+
+    await checkForDatabaseMatches(updateUserDto, this.userModel);
 
     const existingUser = await this.userModel.findByIdAndUpdate(
       userId,

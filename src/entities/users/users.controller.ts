@@ -3,12 +3,9 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   Post,
   Put,
-  Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserEntity } from './types/user.entity';
@@ -26,7 +23,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: UserEntity, isArray: true })
   @Get()
   async getAllUsers(): Promise<UserEntity[]> {
@@ -82,7 +78,7 @@ export class UsersController {
       type: 'object',
       example: {
         status: 409,
-        message: 'a user with the same field already exists',
+        message: 'a user with the same name already exists',
         error: 'Conflict',
       },
     },
@@ -113,20 +109,15 @@ export class UsersController {
       example: {
         status: 400,
         message:
-          'Invalid userId. Id length must be 24 characters, and include only numbers and letters of the Latin alphabet',
+          'Invalid userId. Id length must be 24 characters, and include only numbers and a-f (A-F) letters of the Latin alphabet',
         error: 'Bad Request',
       },
     },
     description: 'Invalid userId',
   })
   @Delete('/:id')
-  async deleteUser(@Res() response, @Param('id') userId: string) {
-    try {
-      const deletedUser = await this.usersService.deleteUser(userId);
-      return response.status(HttpStatus.OK).json(deletedUser);
-    } catch (err) {
-      return response.status(err.status).json(err.response);
-    }
+  async deleteUser(@Param('id') userId: string): Promise<UserEntity> {
+    return await this.usersService.deleteUser(userId);
   }
 
   @ApiOkResponse({
@@ -152,27 +143,28 @@ export class UsersController {
           'username: username must be longer than or equal to 3 characters, username must be a string',
           'password: password must be longer than or equal to 4 characters, password should not be empty',
           'email: email must be an email',
-          'Invalid userId. Id length must be 24 characters, and include only numbers and letters of the Latin alphabet',
         ],
         error: 'Bad Request',
       },
     },
     description: 'Invalid input',
   })
+  @ApiConflictResponse({
+    schema: {
+      type: 'object',
+      example: {
+        status: 409,
+        message: 'a user with the same mail already exists',
+        error: 'Conflict',
+      },
+    },
+    description: 'Conflicting Request',
+  })
   @Put('/:id')
   async updateUser(
-    @Res() response,
     @Param('id') userId: string,
     @Body() updateUserDto: UpdateUserDto,
-  ) {
-    try {
-      const existingUser = await this.usersService.updateUser(
-        userId,
-        updateUserDto,
-      );
-      return response.status(HttpStatus.OK).json(existingUser);
-    } catch (err) {
-      return response.status(err.status).json(err.response);
-    }
+  ): Promise<UserEntity> {
+    return await this.usersService.updateUser(userId, updateUserDto);
   }
 }

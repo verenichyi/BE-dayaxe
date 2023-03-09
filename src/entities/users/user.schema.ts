@@ -13,8 +13,8 @@ export class User {
   @Prop({ type: String, required: true })
   email: string;
 
-  // @Prop({ type: Access, required: true })
-  // accessLvl: Access;
+  @Prop({ type: Object, required: true })
+  accessLvl: Access;
 }
 
 export type UserDocument = HydratedDocument<User>;

@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-
-export type UserDocument = HydratedDocument<User>;
+import { Access } from './types/userTypes';
 
 @Schema({ versionKey: false })
 export class User {
@@ -13,6 +12,10 @@ export class User {
 
   @Prop({ type: String, required: true })
   email: string;
+
+  // @Prop({ type: Access, required: true })
+  // accessLvl: Access;
 }
 
+export type UserDocument = HydratedDocument<User>;
 export const UserSchema = SchemaFactory.createForClass(User);

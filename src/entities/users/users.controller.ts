@@ -43,6 +43,18 @@ export class UsersController {
     },
     description: 'User was not found',
   })
+  @ApiBadRequestResponse({
+    schema: {
+      type: 'object',
+      example: {
+        status: 400,
+        message:
+          'Invalid userId. Id length must be 24 characters, and include only numbers and letters of the Latin alphabet',
+        error: 'Bad Request',
+      },
+    },
+    description: 'Invalid userId',
+  })
   @Get(':id')
   async getUserById(@Param('id') id: string): Promise<UserEntity> {
     return await this.usersService.findById(id);
@@ -83,6 +95,18 @@ export class UsersController {
     },
     description: 'User was not found',
   })
+  @ApiBadRequestResponse({
+    schema: {
+      type: 'object',
+      example: {
+        status: 400,
+        message:
+          'Invalid userId. Id length must be 24 characters, and include only numbers and letters of the Latin alphabet',
+        error: 'Bad Request',
+      },
+    },
+    description: 'Invalid userId',
+  })
   @Delete('/:id')
   async deleteUser(@Res() response, @Param('id') userId: string) {
     try {
@@ -116,6 +140,7 @@ export class UsersController {
           'username: username must be longer than or equal to 3 characters, username must be a string',
           'password: password must be longer than or equal to 4 characters, password should not be empty',
           'email: email must be an email',
+          'Invalid userId. Id length must be 24 characters, and include only numbers and letters of the Latin alphabet',
         ],
         error: 'Bad Request',
       },

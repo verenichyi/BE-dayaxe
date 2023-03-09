@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { AccessLevel } from '../types/userTypes';
+import { Access } from '../types/userTypes';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'Hans' })
@@ -20,27 +20,7 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({
-    example: {
-      users: {
-        delete: false,
-        create: false,
-        update: false,
-        read: true,
-      },
-      daycation: {
-        delete: false,
-        create: true,
-        update: true,
-        read: true,
-      },
-      hotelPasses: {
-        delete: false,
-        create: true,
-        update: true,
-        read: true,
-      },
-    },
-  })
-  accessLvl: AccessLevel;
+  // @IsNotEmpty()
+  // @IsString()
+  // accessLvl: Access;
 }

@@ -1,31 +1,3 @@
-type Host = {
-  delete: true;
-  create: true;
-  update: true;
-  read: true;
-};
-
-type Admin = {
-  delete: false;
-  create: true;
-  update: true;
-  read: true;
-};
-
-type Moderator = {
-  delete: false;
-  create: false;
-  update: true;
-  read: true;
-};
-
-type Spectator = {
-  delete: false;
-  create: false;
-  update: false;
-  read: true;
-};
-
 enum Modules {
   USERS = 'users',
   DAYCATION = 'daycation',
@@ -34,8 +6,8 @@ enum Modules {
   PROMOTIONS = 'promotions',
 }
 
-type Role = Spectator | Moderator | Admin | Host | undefined;
+type AccessType = 'create' | 'read' | 'update' | 'delete';
 
-export type AccessLevel = {
-  [module in Modules]: Role;
+export type Access = {
+  [module in Modules]: AccessType[];
 };

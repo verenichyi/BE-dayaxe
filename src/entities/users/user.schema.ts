@@ -1,6 +1,13 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { Access } from './types/userTypes';
+import { Access, Modules, } from './types/userTypes';
+
+const moduleType = [
+  { type: String, required: false },
+  { type: String, required: false },
+  { type: String, required: false },
+  { type: String, required: false },
+];
 
 @Schema({ versionKey: false })
 export class User {
@@ -15,54 +22,30 @@ export class User {
 
   @Prop({
     type: raw({
-      Users: {
-        type: [
-          { type: String, required: false },
-          { type: String, required: false },
-          { type: String, required: false },
-          { type: String, required: false },
-        ],
+      [Modules.USERS]: {
+        type: moduleType,
         required: true,
       },
-      Daycation: {
-        type: [
-          { type: String, required: false },
-          { type: String, required: false },
-          { type: String, required: false },
-          { type: String, required: false },
-        ],
+      [Modules.DAYCATION]: {
+        type: moduleType,
         required: true,
       },
-      'Hotel Passes': {
-        type: [
-          { type: String, required: false },
-          { type: String, required: false },
-          { type: String, required: false },
-          { type: String, required: false },
-        ],
+      [Modules.HOTEL_PASSES]: {
+        type: moduleType,
         required: true,
       },
-      Moments: {
-        type: [
-          { type: String, required: false },
-          { type: String, required: false },
-          { type: String, required: false },
-          { type: String, required: false },
-        ],
+      [Modules.MOMENTS]: {
+        type: moduleType,
         required: true,
       },
-      Promotions: {
-        type: [
-          { type: String, required: false },
-          { type: String, required: false },
-          { type: String, required: false },
-          { type: String, required: false },
-        ],
+      [Modules.PROMOTIONS]: {
+        type: moduleType,
         required: true,
       },
     }),
     required: true,
     versionKey: false,
+    _id: false
   })
   access: Access;
 }

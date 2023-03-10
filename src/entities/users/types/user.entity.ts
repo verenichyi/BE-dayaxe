@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Types } from 'mongoose';
-import { Access } from './userTypes';
+import { Access, Modules } from './userTypes';
 
 export class UserEntity {
   @ApiProperty({ example: '6407588c77660290910cfd16' })
@@ -17,11 +17,11 @@ export class UserEntity {
 
   @ApiProperty({
     example: {
-      Users: ['read', 'update'],
-      Daycation: ['read', 'update'],
-      'Hotel Passes': ['read', 'update'],
-      Moments: ['read', 'update'],
-      Promotions: ['read', 'update'],
+      [Modules.USERS]: ['read', 'update'],
+      [Modules.DAYCATION]: ['read', 'update'],
+      [Modules.HOTEL_PASSES]: ['read', 'update'],
+      [Modules.MOMENTS]: ['read', 'update'],
+      [Modules.PROMOTIONS]: ['read', 'update'],
     },
   })
   access: Access;

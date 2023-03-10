@@ -10,6 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './types/user.entity';
 import { User, UserDocument } from './user.schema';
+import { RegisterUserDto } from '../auth/dto/register-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -30,7 +31,7 @@ export class UsersService {
     return user;
   }
 
-  async createUser(body: CreateUserDto): Promise<UserEntity> {
+  async createUser(body: CreateUserDto | RegisterUserDto): Promise<UserEntity> {
     await checkNewUserForDatabaseMatches(body, this.userModel);
     const newUser = await new this.userModel(body);
     return newUser.save();
@@ -66,5 +67,9 @@ export class UsersService {
       throw new NotFoundException(`User ${userId} not found`);
     }
     return existingUser;
+  }
+
+  async getUserByEmail(email: string) {
+    return await this.userModel.find({ email });
   }
 }

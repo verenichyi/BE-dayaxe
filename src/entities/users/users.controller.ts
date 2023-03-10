@@ -18,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { RegisterUserDto } from '../auth/dto/register-user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -86,7 +87,7 @@ export class UsersController {
     description: 'Conflicting Request',
   })
   @Post()
-  async createUser(@Body() body: CreateUserDto): Promise<UserEntity> {
+  async createUser(@Body() body: CreateUserDto | RegisterUserDto): Promise<UserEntity> {
     return await this.usersService.createUser(body);
   }
 

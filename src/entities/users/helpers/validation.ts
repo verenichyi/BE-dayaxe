@@ -3,6 +3,7 @@ import { Model, Types } from 'mongoose';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserDocument } from '../user.schema';
+import { RegisterUserDto } from '../../auth/dto/register-user.dto';
 
 export function isIdValid(id: string): void | never {
   if (!Types.ObjectId.isValid(id)) {
@@ -16,7 +17,7 @@ export function isIdValid(id: string): void | never {
 }
 
 export async function checkNewUserForDatabaseMatches(
-  body: CreateUserDto | UpdateUserDto,
+  body: CreateUserDto | UpdateUserDto | RegisterUserDto,
   userModel: Model<UserDocument>,
 ): Promise<void | never> {
   const userByName = await userModel.findOne({

@@ -1,8 +1,7 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Access, Modules } from '../types/userTypes';
 
-export class CreateUserDto {
+export class RegisterUserDto {
   @ApiProperty({ example: 'Hans' })
   @IsString()
   @IsNotEmpty()
@@ -19,15 +18,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
-
-  @ApiProperty({
-    example: {
-      [Modules.USERS]: ['read', 'update'],
-      [Modules.DAYCATION]: ['read', 'update'],
-      [Modules.HOTEL_PASSES]: ['read', 'update'],
-      [Modules.MOMENTS]: ['read', 'update'],
-      [Modules.PROMOTIONS]: ['read', 'update'],
-    },
-  })
-  access: Access;
 }

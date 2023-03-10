@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { Access, Modules, } from './types/userTypes';
+import { Access, Modules } from './types/userTypes';
 
 const moduleType = [
   { type: String, required: false },
@@ -8,6 +8,29 @@ const moduleType = [
   { type: String, required: false },
   { type: String, required: false },
 ];
+
+const accessRawType = {
+  [Modules.USERS]: {
+    type: moduleType,
+    required: true,
+  },
+  [Modules.DAYCATION]: {
+    type: moduleType,
+    required: true,
+  },
+  [Modules.HOTEL_PASSES]: {
+    type: moduleType,
+    required: true,
+  },
+  [Modules.MOMENTS]: {
+    type: moduleType,
+    required: true,
+  },
+  [Modules.PROMOTIONS]: {
+    type: moduleType,
+    required: true,
+  },
+};
 
 @Schema({ versionKey: false })
 export class User {
@@ -21,31 +44,19 @@ export class User {
   email: string;
 
   @Prop({
-    type: raw({
-      [Modules.USERS]: {
-        type: moduleType,
-        required: true,
-      },
-      [Modules.DAYCATION]: {
-        type: moduleType,
-        required: true,
-      },
-      [Modules.HOTEL_PASSES]: {
-        type: moduleType,
-        required: true,
-      },
-      [Modules.MOMENTS]: {
-        type: moduleType,
-        required: true,
-      },
-      [Modules.PROMOTIONS]: {
-        type: moduleType,
-        required: true,
-      },
-    }),
+    type: raw(accessRawType),
     required: true,
     versionKey: false,
-    _id: false
+    _id: false,
+    default(): Access {
+      return {
+        [Modules.USERS]: ['read'],
+        [Modules.DAYCATION]: ['read'],
+        [Modules.HOTEL_PASSES]: ['read'],
+        [Modules.MOMENTS]: ['read'],
+        [Modules.PROMOTIONS]: ['read'],
+      };
+    },
   })
   access: Access;
 }

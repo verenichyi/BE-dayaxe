@@ -6,6 +6,13 @@ export enum Modules {
   PROMOTIONS = 'Promotions',
 }
 
+export enum AccessTypes {
+  Create = 'create',
+  Read = 'read',
+  Update = 'update',
+  Delete = 'delete',
+}
+
 export type AccessType = 'create' | 'read' | 'update' | 'delete';
 
 export type Access = {

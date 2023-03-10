@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserEntity } from './types/user.entity';
@@ -14,18 +15,26 @@ import {
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
-  ApiOkResponse, ApiTags,
+  ApiOkResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterUserDto } from '../auth/dto/register-user.dto';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { ModuleAccess } from './access.decorator';
+import { AccessTypes, Modules } from './types/userTypes';
+import { AccessGuard } from '../../guards/access.guard';
 
 @ApiTags('Users')
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiOkResponse({ type: UserEntity, isArray: true })
+  @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Read })
+  @UseGuards(AccessGuard)
   @Get()
   async getAllUsers(): Promise<UserEntity[]> {
     return await this.usersService.getAll();
@@ -54,6 +63,8 @@ export class UsersController {
     },
     description: 'Invalid userId',
   })
+  @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Read })
+  @UseGuards(AccessGuard)
   @Get(':id')
   async getUserById(@Param('id') id: string): Promise<UserEntity> {
     return await this.usersService.findById(id);
@@ -86,8 +97,12 @@ export class UsersController {
     },
     description: 'Conflicting Request',
   })
+  @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Create })
+  @UseGuards(AccessGuard)
   @Post()
-  async createUser(@Body() body: CreateUserDto | RegisterUserDto): Promise<UserEntity> {
+  async createUser(
+    @Body() body: CreateUserDto | RegisterUserDto,
+  ): Promise<UserEntity> {
     return await this.usersService.createUser(body);
   }
 
@@ -117,6 +132,8 @@ export class UsersController {
     },
     description: 'Invalid userId',
   })
+  @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Delete })
+  @UseGuards(AccessGuard)
   @Delete('/:id')
   async deleteUser(@Param('id') userId: string): Promise<UserEntity> {
     return await this.usersService.deleteUser(userId);
@@ -162,6 +179,8 @@ export class UsersController {
     },
     description: 'Conflicting Request',
   })
+  @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Update })
+  @UseGuards(AccessGuard)
   @Put('/:id')
   async updateUser(
     @Param('id') userId: string,

@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { forwardRef, Module } from '@nestjs/common';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { config } from 'dotenv';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -9,15 +9,8 @@ config();
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService],
-  imports: [
-    UsersModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY,
-      signOptions: {
-        expiresIn: process.env.TOKEN_EXPIRE_TIME,
-      },
-    }),
-  ],
+  providers: [AuthService, JwtService],
+  imports: [forwardRef(() => UsersModule)],
+  exports: [AuthService, JwtService],
 })
 export class AuthModule {}

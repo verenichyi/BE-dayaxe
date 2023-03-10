@@ -69,7 +69,7 @@ export class UsersService {
     return existingUser;
   }
 
-  async getUserByEmail(email: string) {
-    return await this.userModel.find({ email });
+  async getUserByEmail(email: string): Promise<UserEntity>  {
+    return await this.userModel.findOne({ email });
   }
 }

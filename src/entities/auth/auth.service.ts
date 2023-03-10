@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { config } from 'dotenv';
@@ -15,7 +15,10 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
-  async login(loginDto: LoginUserDto) {}
+  async login(loginDto: LoginUserDto) {
+    const user = await this.validateUser(loginDto);
+    return this.generateToken(user);
+  }
 
   async registration(registerDto: RegisterUserDto) {
     const hashedPassword = await bcrypt.hash(
@@ -38,5 +41,19 @@ export class AuthService {
     return {
       token: this.jwtService.sign(payload),
     };
+  }
+
+  private async validateUser(userDto: LoginUserDto): Promise<UserEntity> {
+    const user = await this.usersService.getUserByEmail(userDto.email);
+    const isPasswordCorrect = await bcrypt.compare(
+      userDto.password,
+      user.password,
+    );
+
+    if (!user && !isPasswordCorrect) {
+      throw new UnauthorizedException();
+    }
+
+    return user;
   }
 }

@@ -9,29 +9,36 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse, ApiBearerAuth,
+  ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiTags
-} from "@nestjs/swagger";
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UserEntity } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { RegisterUserDto } from '../auth/dto/register-user.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { AccessTypes, Modules } from './types/userTypes';
 import { AccessGuard } from '../../guards/access.guard';
 import { ModuleAccess } from './access.decorator';
 import responses from './constants/user-api';
+import authResponses from '../auth/constants/auth-api';
 
 const { getAllUsers, getUserById, createUser, deleteUser, updateUser } =
   responses;
 
+const { UnauthorizedResponse, ForbiddenResponse } = authResponses;
+
 @ApiTags('Users')
 @ApiBearerAuth()
+@ApiUnauthorizedResponse(UnauthorizedResponse)
+@ApiForbiddenResponse(ForbiddenResponse)
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
@@ -61,9 +68,7 @@ export class UsersController {
   @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Create })
   @UseGuards(AccessGuard)
   @Post()
-  async createUser(
-    @Body() body: CreateUserDto | RegisterUserDto,
-  ): Promise<UserEntity> {
+  async createUser(@Body() body: CreateUserDto): Promise<UserEntity> {
     return await this.usersService.createUser(body);
   }
 

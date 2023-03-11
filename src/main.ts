@@ -12,10 +12,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Dayaxe CMS')
-    .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'Access token',
-    )
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/swagger', app, document);

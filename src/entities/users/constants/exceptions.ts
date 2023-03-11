@@ -21,7 +21,7 @@ const exceptions = {
   },
   Conflict: {
     status: 409,
-    message: 'User with the same username already exists',
+    message: 'User with the same username or email already exists',
     error: 'Conflict',
   },
 };

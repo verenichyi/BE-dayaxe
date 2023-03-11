@@ -12,12 +12,7 @@ const accessRawType = Object.values(Modules).reduce((acc, cur) => {
 }, {});
 
 const accessRawTypeDefaultValue = Object.values(Modules).reduce((acc, cur) => {
-  acc[cur] = [
-    AccessTypes.Create,
-    AccessTypes.Read,
-    AccessTypes.Update,
-    AccessTypes.Delete,
-  ];
+  acc[cur] = [AccessTypes.Read];
 
   return acc;
 }, {} as Access);

@@ -7,6 +7,7 @@ async function bootstrap() {
   const PORT = process.env.PORT || 4000;
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder().setTitle('Dayaxe CMS').build();

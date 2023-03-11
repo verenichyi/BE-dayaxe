@@ -10,7 +10,13 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
 
-  const config = new DocumentBuilder().setTitle('Dayaxe CMS').build();
+  const config = new DocumentBuilder()
+    .setTitle('Dayaxe CMS')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'Access token',
+    )
+    .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/swagger', app, document);
 

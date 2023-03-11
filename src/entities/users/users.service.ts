@@ -8,9 +8,12 @@ import {
 } from 'src/entities/users/helpers/validation';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './types/user.entity';
+import { UserEntity } from './user.entity';
 import { User, UserDocument } from './user.schema';
 import { RegisterUserDto } from '../auth/dto/register-user.dto';
+import exceptions from './constants/exceptions';
+
+const { NotFound } = exceptions;
 
 @Injectable()
 export class UsersService {
@@ -26,7 +29,7 @@ export class UsersService {
     const user = await this.userModel.findById(userId);
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException(NotFound);
     }
     return user;
   }
@@ -41,7 +44,7 @@ export class UsersService {
     isIdValid(userId);
     const deletedUser = await this.userModel.findByIdAndDelete(userId);
     if (!deletedUser) {
-      throw new NotFoundException(`User ${userId} not found`);
+      throw new NotFoundException(NotFound);
     }
     return deletedUser;
   }
@@ -64,12 +67,12 @@ export class UsersService {
       { new: true },
     );
     if (!existingUser) {
-      throw new NotFoundException(`User ${userId} not found`);
+      throw new NotFoundException(NotFound);
     }
     return existingUser;
   }
 
-  async getUserByEmail(email: string): Promise<UserEntity>  {
+  async getUserByEmail(email: string): Promise<UserEntity> {
     return await this.userModel.findOne({ email });
   }
 }

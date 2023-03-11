@@ -5,7 +5,7 @@ import { config } from 'dotenv';
 import { UsersService } from '../users/users.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { UserEntity } from '../users/types/user.entity';
+import { UserEntity } from '../users/user.entity';
 
 config();
 
@@ -15,6 +15,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
+
   async login(loginDto: LoginUserDto) {
     const user = await this.validateUser(loginDto);
     return this.generateToken(user);

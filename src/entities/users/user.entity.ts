@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Types } from 'mongoose';
-import { Access, Modules } from './userTypes';
+import { Access, Modules } from './types/userTypes';
 
 export class UserEntity {
   @ApiProperty({ example: '6407588c77660290910cfd16' })

@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { config } from 'dotenv';
 import { UsersModule } from './entities/users/users.module';
 import { AuthModule } from './entities/auth/auth.module';
-import admin from './entities/users/constants/defaultUsersDocument';
+import getDefaultUsersDocument from './entities/users/dto/getDefaultUsersDocument';
 
 config();
 
@@ -20,7 +20,8 @@ config();
         const usersAmount = await usersCollection.countDocuments();
 
         if (usersAmount === 0) {
-          await usersCollection.insertOne(admin);
+          const document = await getDefaultUsersDocument();
+          await usersCollection.insertOne(document);
         }
 
         return connection;

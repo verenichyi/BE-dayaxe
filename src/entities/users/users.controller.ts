@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -29,6 +30,7 @@ import { AccessGuard } from '../../guards/access.guard';
 import { ModuleAccess } from './access.decorator';
 import responses from './constants/user-api';
 import authResponses from '../auth/constants/auth-api';
+import { UserInterceptor } from '../../interceptors/user.interceptor';
 
 const { getAllUsers, getUserById, createUser, deleteUser, updateUser } =
   responses;
@@ -39,6 +41,7 @@ const { UnauthorizedResponse, ForbiddenResponse } = authResponses;
 @ApiBearerAuth()
 @ApiUnauthorizedResponse(UnauthorizedResponse)
 @ApiForbiddenResponse(ForbiddenResponse)
+@UseInterceptors(UserInterceptor)
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {

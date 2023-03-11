@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { config } from 'dotenv';
 import { UsersModule } from './entities/users/users.module';
 import { AuthModule } from './entities/auth/auth.module';
-import getDefaultUsersDocument from './entities/users/dto/getDefaultUsersDocument';
+import getDefaultUsersDocument from './entities/users/helpers/getDefaultUsersDocument';
 
 config();
 

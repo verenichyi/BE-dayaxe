@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
-  checkNewUserForDatabaseMatches,
-  checkUpdatedUserForDatabaseMatches,
+  checkUserForDatabaseMatches,
   isIdValid,
 } from 'src/entities/users/helpers/validation';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -35,7 +34,11 @@ export class UsersService {
   }
 
   async createUser(body: CreateUserDto | RegisterUserDto): Promise<UserEntity> {
-    await checkNewUserForDatabaseMatches(body, this.userModel);
+    await checkUserForDatabaseMatches(
+      body.username,
+      body.email,
+      this.userModel,
+    );
     const newUser = await new this.userModel(body);
     return newUser.save();
   }
@@ -55,8 +58,9 @@ export class UsersService {
   ): Promise<UserEntity> {
     isIdValid(userId);
 
-    await checkUpdatedUserForDatabaseMatches(
-      updateUserDto,
+    await checkUserForDatabaseMatches(
+      updateUserDto.username,
+      updateUserDto.email,
       this.userModel,
       userId,
     );

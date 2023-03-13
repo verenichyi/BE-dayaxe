@@ -23,6 +23,7 @@ export class UserEntity {
   @ApiProperty({
     example: {
       [Modules.USERS]: ['read', 'update'],
+      [Modules.HOTELS]: ['read', 'update'],
       [Modules.DAYCATION]: ['read', 'update'],
       [Modules.HOTEL_PASSES]: ['read', 'update'],
       [Modules.MOMENTS]: ['read', 'update'],

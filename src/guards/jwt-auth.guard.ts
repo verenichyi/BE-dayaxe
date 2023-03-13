@@ -7,8 +7,11 @@ import {
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { config } from 'dotenv';
+import authExceptions from '../entities/auth/constants/exceptions';
 
 config();
+
+const { Unauthorized } = authExceptions;
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -23,7 +26,7 @@ export class JwtAuthGuard implements CanActivate {
       const authHeader = req.headers.authorization;
       const [bearer, token] = authHeader.split(' ');
       if (bearer !== 'Bearer' || !token) {
-        throw new UnauthorizedException('User is not authorized');
+        throw new UnauthorizedException(Unauthorized);
       }
 
       const user = this.jwtService.verify(token, {
@@ -33,7 +36,7 @@ export class JwtAuthGuard implements CanActivate {
 
       return true;
     } catch (error) {
-      throw new UnauthorizedException('User is not authorized');
+      throw new UnauthorizedException(Unauthorized);
     }
   }
 }

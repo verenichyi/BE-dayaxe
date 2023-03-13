@@ -2,11 +2,12 @@ import { join } from 'node:path';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { config } from 'dotenv';
 import { HotelEntity } from './hotel.entity';
 import { Hotel, HotelDocument } from './hotel.schema';
 import { FilesService } from '../files/files.service';
-import { config } from 'dotenv';
 import { isIdValid } from '../users/helpers/validation';
+import exceptions from './constants/exceptions';
 
 config();
 
@@ -28,13 +29,14 @@ export class HotelsService {
 
     const hotel = await this.hotelModel.findById(id);
     if (!hotel) {
-      throw new NotFoundException('Hotel not found');
+      throw new NotFoundException(exceptions.NotFound);
     }
 
     return hotel;
   }
 
   async addHotel(image: Express.Multer.File): Promise<HotelEntity> {
+    console.log(image);
     const directory = join('images', 'hotels');
     const fileName = await this.filesService.createFile(image, directory);
 
@@ -50,7 +52,7 @@ export class HotelsService {
   ): Promise<HotelEntity> {
     const hotel = await this.hotelModel.findById(id);
     if (!hotel) {
-      throw new NotFoundException('Hotel not found');
+      throw new NotFoundException(exceptions.NotFound);
     }
 
     const imagePath = hotel.image.replace(join(`${APP_HOSTNAME}:${PORT}`), '');
@@ -75,12 +77,12 @@ export class HotelsService {
 
     const hotel = await this.hotelModel.findById(id);
     if (!hotel) {
-      throw new NotFoundException('Hotel not found');
+      throw new NotFoundException(exceptions.NotFound);
     }
 
     const imagePath = hotel.image.replace(join(`${APP_HOSTNAME}:${PORT}`), '');
 
     await this.filesService.deleteFile(imagePath);
-    await this.hotelModel.deleteOne(id);
+    await this.hotelModel.findByIdAndDelete(id);
   }
 }

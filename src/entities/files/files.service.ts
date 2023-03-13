@@ -3,6 +3,7 @@ import { existsSync, mkdirSync } from 'node:fs';
 import { writeFile, rm } from 'node:fs/promises';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as uuid from 'uuid';
+import exceptions from './constants/exceptions';
 
 const staticDirectory = join(__dirname, '..', '..', 'static');
 
@@ -27,7 +28,7 @@ export class FilesService {
 
       return fileName;
     } catch (error) {
-      throw new InternalServerErrorException('File creating error');
+      throw new InternalServerErrorException(exceptions.InternalServerError);
     }
   }
 
@@ -37,7 +38,7 @@ export class FilesService {
 
       await rm(path);
     } catch (error) {
-      throw new InternalServerErrorException('File deleting error');
+      throw new InternalServerErrorException(exceptions.InternalServerError);
     }
   }
 }

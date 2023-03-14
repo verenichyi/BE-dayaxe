@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -21,6 +22,7 @@ import { StatusCodes } from 'http-status-codes';
 import responses from '../users/constants/user-api';
 import authResponses from './constants/auth-api';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { UserPayloadEntity } from '../users/user-payload.entity';
 
 const { createUser } = responses;
 const { login, UnauthorizedResponse, registration } = authResponses;
@@ -32,8 +34,8 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/check')
-  async checkAuth() {
-    return 'User is authorized';
+  async checkAuth(@Req() request: Request & { user: UserPayloadEntity }) {
+    return await this.authService.checkAuth(request.user);
   }
 
   @HttpCode(StatusCodes.OK)

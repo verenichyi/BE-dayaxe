@@ -5,9 +5,12 @@ import { config } from 'dotenv';
 import { UsersService } from '../users/users.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { UserEntity } from '../users/types/user.entity';
+import { UserEntity } from '../users/user.entity';
+import authExceptions from './constants/exceptions';
 
 config();
+
+const { Unauthorized } = authExceptions;
 
 @Injectable()
 export class AuthService {
@@ -15,6 +18,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
+
   async login(loginDto: LoginUserDto) {
     const user = await this.validateUser(loginDto);
     return this.generateToken(user);
@@ -48,13 +52,18 @@ export class AuthService {
 
   private async validateUser(userDto: LoginUserDto): Promise<UserEntity> {
     const user = await this.usersService.getUserByEmail(userDto.email);
+
+    if (!user) {
+      throw new UnauthorizedException(Unauthorized);
+    }
+
     const isPasswordCorrect = await bcrypt.compare(
       userDto.password,
       user.password,
     );
 
-    if (!user && !isPasswordCorrect) {
-      throw new UnauthorizedException();
+    if (!isPasswordCorrect) {
+      throw new UnauthorizedException(Unauthorized);
     }
 
     return user;

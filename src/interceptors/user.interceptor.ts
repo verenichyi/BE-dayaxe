@@ -4,18 +4,22 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
 import { map, Observable } from 'rxjs';
-import { UserEntity } from '../entities/users/user.entity';
 
 @Injectable()
 export class UserInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, handler: CallHandler): Observable<any> {
     return handler.handle().pipe(
-      map((data: any) => {
-        return plainToInstance(UserEntity, data, {
-          excludeExtraneousValues: true,
-        });
+      map((data) => {
+        if (Array.isArray(data)) {
+          return data.map((user) => {
+            const { _id, email, username, access } = user;
+            return { _id, email, username, access };
+          });
+        }
+
+        const { _id, email, username, access } = data;
+        return { _id, email, username, access };
       }),
     );
   }

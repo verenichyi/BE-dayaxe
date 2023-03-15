@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
+import { config } from 'dotenv';
 import {
   checkUserForDatabaseMatches,
   isIdValid,
@@ -13,6 +15,7 @@ import { RegisterUserDto } from '../auth/dto/register-user.dto';
 import exceptions from './constants/exceptions';
 
 const { NotFound } = exceptions;
+config();
 
 @Injectable()
 export class UsersService {
@@ -39,7 +42,16 @@ export class UsersService {
       body.email,
       this.userModel,
     );
-    const newUser = await new this.userModel(body);
+
+    const hashedPassword = await bcrypt.hash(
+      body.password,
+      parseInt(process.env.CRYPT_SALT),
+    );
+
+    const newUser = await new this.userModel({
+      ...body,
+      password: hashedPassword,
+    });
     return newUser.save();
   }
 

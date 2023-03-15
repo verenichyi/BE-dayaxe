@@ -22,12 +22,15 @@ export async function checkUserForDatabaseMatches(
   });
   const userByEmail = await userModel.findOne({ email });
 
-  if (
-    userId &&
-    ((userByName && userByName._id.toString() !== userId) ||
-      (userByEmail && userByEmail._id.toString() !== userId))
-  ) {
-    throw new ConflictException(Conflict);
+  if (userId) {
+    if (
+      (userByName && userByName._id.toString() !== userId) ||
+      (userByEmail && userByEmail._id.toString() !== userId)
+    ) {
+      throw new ConflictException(Conflict);
+    }
+
+    return;
   }
 
   if (userByName || userByEmail) {

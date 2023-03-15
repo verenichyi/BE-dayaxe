@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { config } from 'dotenv';
 import authExceptions from '../entities/auth/constants/exceptions';
+import { UserPayloadEntity } from '../entities/users/user-payload.entity';
 
 config();
 
@@ -32,7 +33,9 @@ export class JwtAuthGuard implements CanActivate {
       const user = this.jwtService.verify(token, {
         secret: process.env.JWT_SECRET_KEY,
       });
-      req.user = user;
+
+      const { _id, email, username, access } = user;
+      req.user = { _id, email, username, access } as UserPayloadEntity;
 
       return true;
     } catch (error) {

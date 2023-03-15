@@ -1,8 +1,19 @@
-import { Modules } from '../types/userTypes';
+import { Access, AccessTypes, Modules } from '../types/userTypes';
 import * as bcrypt from 'bcrypt';
 import { config } from 'dotenv';
 
 config();
+
+const accessDefaultValue = Object.values(Modules).reduce((acc, cur) => {
+  acc[cur] = [
+    AccessTypes.Create,
+    AccessTypes.Read,
+    AccessTypes.Update,
+    AccessTypes.Delete,
+  ];
+
+  return acc;
+}, {} as Access);
 
 const getDefaultUsersDocument = async () => {
   const password = await bcrypt.hash('admin', parseInt(process.env.CRYPT_SALT));
@@ -11,13 +22,7 @@ const getDefaultUsersDocument = async () => {
     username: 'admin',
     password,
     email: 'admin@mail.com',
-    access: {
-      [Modules.USERS]: ['create', 'read', 'update', 'delete'],
-      [Modules.DAYCATION]: ['create', 'read', 'update', 'delete'],
-      [Modules.HOTEL_PASSES]: ['create', 'read', 'update', 'delete'],
-      [Modules.MOMENTS]: ['create', 'read', 'update', 'delete'],
-      [Modules.PROMOTIONS]: ['create', 'read', 'update', 'delete'],
-    },
+    access: accessDefaultValue,
   };
 };
 

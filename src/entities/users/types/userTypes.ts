@@ -1,4 +1,5 @@
 export enum Modules {
+  HOTELS = 'Hotels',
   USERS = 'Users',
   DAYCATION = 'Daycation',
   HOTEL_PASSES = 'Hotel Passes',

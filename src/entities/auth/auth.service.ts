@@ -7,6 +7,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UserEntity } from '../users/user.entity';
 import authExceptions from './constants/exceptions';
+import { UserPayloadEntity } from '../users/user-payload.entity';
 
 config();
 
@@ -21,7 +22,9 @@ export class AuthService {
 
   async login(loginDto: LoginUserDto) {
     const user = await this.validateUser(loginDto);
-    return this.generateToken(user);
+    const { _id, email, username, access } = user;
+    const payload = { _id, email, username, access };
+    return this.generateToken(payload);
   }
 
   async registration(registerDto: RegisterUserDto) {
@@ -35,19 +38,24 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    return this.generateToken(user);
+    const { _id, email, username, access } = user;
+    const payload = { _id, email, username, access };
+
+    return this.generateToken(payload);
   }
 
-  private async generateToken(user: UserEntity) {
-    const { _id, email, username, access } = user;
-    const payload = { id: _id, email, username, access };
-
+  private async generateToken(payload: UserPayloadEntity) {
     return {
       token: this.jwtService.sign(payload, {
         secret: process.env.JWT_SECRET_KEY,
         expiresIn: process.env.TOKEN_EXPIRE_TIME,
       }),
+      user: payload,
     };
+  }
+
+  async checkAuth(user: UserPayloadEntity) {
+    return await this.generateToken(user);
   }
 
   private async validateUser(userDto: LoginUserDto): Promise<UserEntity> {

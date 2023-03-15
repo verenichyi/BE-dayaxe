@@ -1,4 +1,12 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -13,6 +21,8 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { StatusCodes } from 'http-status-codes';
 import responses from '../users/constants/user-api';
 import authResponses from './constants/auth-api';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { UserPayloadEntity } from '../users/user-payload.entity';
 
 const { createUser } = responses;
 const { login, UnauthorizedResponse, registration } = authResponses;
@@ -21,6 +31,12 @@ const { login, UnauthorizedResponse, registration } = authResponses;
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/check')
+  async checkAuth(@Req() request: Request & { user: UserPayloadEntity }) {
+    return await this.authService.checkAuth(request.user);
+  }
 
   @HttpCode(StatusCodes.OK)
   @ApiOkResponse(login.ApiOkResponse)

@@ -29,7 +29,35 @@ export class HotelPassesService {
   }
 
   async addHotelPass(hotelPassDto: HotelPassDto): Promise<HotelPass> {
-    const hotel = await new this.hotelPassModel(hotelPassDto);
-    return hotel.save();
+    const hotelPass = await new this.hotelPassModel(hotelPassDto);
+    return hotelPass.save();
+  }
+
+  async updateHotelPass(
+    id: string,
+    hotelPassDto: HotelPassDto,
+  ): Promise<HotelPass> {
+    const updatedHotelPass = await this.hotelPassModel.findByIdAndUpdate(
+      id,
+      hotelPassDto,
+      {
+        new: true,
+      },
+    );
+
+    if (!updatedHotelPass) {
+      throw new NotFoundException(exceptions.NotFound);
+    }
+
+    return updatedHotelPass;
+  }
+
+  async deleteHotelPass(id): Promise<void> {
+    isIdValid(id);
+
+    const deletedHotelPass = await this.hotelPassModel.findByIdAndDelete(id);
+    if (!deletedHotelPass) {
+      throw new NotFoundException(exceptions.NotFound);
+    }
   }
 }

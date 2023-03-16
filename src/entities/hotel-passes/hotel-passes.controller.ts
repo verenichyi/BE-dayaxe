@@ -1,14 +1,26 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { StatusCodes } from 'http-status-codes';
 import { AccessGuard } from 'src/guards/access.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import authResponses from '../auth/constants/auth-api';
@@ -72,5 +84,47 @@ export class HotelPassesController {
   @Post()
   async addHotelPass(@Body() hotelPassDto: HotelPassDto): Promise<HotelPass> {
     return await this.hotelPassesService.addHotelPass(hotelPassDto);
+  }
+
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse(UnauthorizedResponse)
+  @ApiForbiddenResponse(ForbiddenResponse)
+  @ApiOkResponse(updateHotelPass.ApiOkResponse)
+  @ApiNotFoundResponse(updateHotelPass.ApiNotFoundResponse)
+  @ApiInternalServerErrorResponse(
+    updateHotelPass.ApiInternalServerErrorResponse,
+  )
+  @UseGuards(JwtAuthGuard)
+  @ModuleAccess({
+    module: Modules.HOTEL_PASSES,
+    accessType: AccessTypes.Update,
+  })
+  @UseGuards(AccessGuard)
+  @Put(':id')
+  async updateHotelPass(
+    @Param('id') id: string,
+    @Body() hotelPassDto: HotelPassDto,
+  ): Promise<HotelPass> {
+    return await this.hotelPassesService.updateHotelPass(id, hotelPassDto);
+  }
+
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse(UnauthorizedResponse)
+  @ApiForbiddenResponse(ForbiddenResponse)
+  @ApiNoContentResponse()
+  @ApiNotFoundResponse(deleteHotelPass.ApiNotFoundResponse)
+  @ApiInternalServerErrorResponse(
+    deleteHotelPass.ApiInternalServerErrorResponse,
+  )
+  @HttpCode(StatusCodes.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
+  @ModuleAccess({
+    module: Modules.HOTEL_PASSES,
+    accessType: AccessTypes.Delete,
+  })
+  @UseGuards(AccessGuard)
+  @Delete(':id')
+  async deleteHotelPass(@Param('id') id: string): Promise<void> {
+    await this.hotelPassesService.deleteHotelPass(id);
   }
 }

@@ -45,6 +45,12 @@ const {
 export class HotelPassesController {
   constructor(private readonly hotelPassesService: HotelPassesService) {}
 
+  @ApiOkResponse(getAllHotelPasses.ApiOkResponse)
+  @Get('/public')
+  async getAllHotelsPublic(): Promise<HotelPass[]> {
+    return await this.hotelPassesService.getAllHotelPasses();
+  }
+
   @ApiBearerAuth()
   @ApiUnauthorizedResponse(UnauthorizedResponse)
   @ApiForbiddenResponse(ForbiddenResponse)

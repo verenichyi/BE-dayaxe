@@ -38,18 +38,18 @@ export class HotelPassDto {
   location: string;
 
   @ApiProperty({
-    example: 5,
+    example: '5',
   })
   @IsNotEmpty()
   @IsNumber()
-  ratingPercentage: number;
+  ratingPercentage: string;
 
   @ApiProperty({
-    example: 128,
+    example: '128',
   })
   @IsNotEmpty()
   @IsNumber()
-  ratingAmount: number;
+  ratingAmount: string;
 
   @ApiProperty({
     example: '25$/guest',

@@ -18,14 +18,14 @@ export class HotelPass {
   @Prop({ type: String, required: true })
   location: string;
 
-  @Prop({ type: String, required: true })
-  ratingPercentage: string;
+  @Prop({ type: Number, required: true })
+  ratingPercentage: number;
 
-  @Prop({ type: String, required: true })
-  ratingAmount: string;
+  @Prop({ type: Number, required: true })
+  ratingAmount: number;
 
-  @Prop({ type: String, required: true })
-  price: string;
+  @Prop({ type: Number, required: true })
+  price: number;
 }
 
 export type HotelPassDocument = HydratedDocument<HotelPass>;

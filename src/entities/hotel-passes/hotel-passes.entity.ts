@@ -33,15 +33,15 @@ export class HotelPassesEntity {
   @ApiProperty({
     example: 5,
   })
-  ratingPercentage: string;
+  ratingPercentage: number;
 
   @ApiProperty({
     example: 128,
   })
-  ratingAmount: string;
+  ratingAmount: number;
 
   @ApiProperty({
-    example: '$25/guest',
+    example: 25,
   })
-  price: string;
+  price: number;
 }

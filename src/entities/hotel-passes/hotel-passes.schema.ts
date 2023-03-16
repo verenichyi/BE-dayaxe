@@ -1,32 +1,31 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { PassType, ResortType } from './types/hotelPassesTypes';
 
 @Schema({ versionKey: false })
 export class HotelPasses {
   @Prop({ type: String, required: true })
+  type: string;
+
+  @Prop({ type: String, required: true })
   image: string;
 
   @Prop({ type: String, required: true })
-  name: string;
+  title: string;
 
   @Prop({ type: String, required: true })
-  passType: PassType;
+  passType: string;
 
   @Prop({ type: String, required: true })
-  resortType: ResortType;
+  location: string;
+
+  @Prop({ type: Number, required: true })
+  ratingPercentage: number;
+
+  @Prop({ type: Number, required: true })
+  ratingAmount: number;
 
   @Prop({ type: String, required: true })
-  city: string;
-
-  @Prop({ type: String, required: true })
-  rating: string;
-
-  @Prop({ type: String, required: true })
-  reviewsNumber: number;
-
-  @Prop({ type: String, required: true })
-  pricePerGuest: number;
+  price: string;
 }
 
 export type HotelPassesDocument = HydratedDocument<HotelPasses>;

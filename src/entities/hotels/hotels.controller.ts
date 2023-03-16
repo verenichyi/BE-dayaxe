@@ -51,7 +51,7 @@ export class HotelsController {
   @ApiForbiddenResponse(ForbiddenResponse)
   @ApiOkResponse(getAllHotels.ApiOkResponse)
   @UseGuards(JwtAuthGuard)
-  @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Read })
+  @ModuleAccess({ module: Modules.HOTELS, accessType: AccessTypes.Read })
   @UseGuards(AccessGuard)
   @Get()
   async getAllHotels(): Promise<HotelEntity[]> {
@@ -64,7 +64,7 @@ export class HotelsController {
   @ApiOkResponse(getHotelById.ApiOkResponse)
   @ApiNotFoundResponse(getHotelById.ApiNotFoundResponse)
   @UseGuards(JwtAuthGuard)
-  @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Read })
+  @ModuleAccess({ module: Modules.HOTELS, accessType: AccessTypes.Read })
   @UseGuards(AccessGuard)
   @Get(':id')
   async getHotelById(@Param('id') id: string): Promise<HotelEntity> {
@@ -77,7 +77,7 @@ export class HotelsController {
   @ApiCreatedResponse(addHotel.ApiCreatedResponse)
   @ApiInternalServerErrorResponse(addHotel.ApiInternalServerErrorResponse)
   @UseGuards(JwtAuthGuard)
-  @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Create })
+  @ModuleAccess({ module: Modules.HOTELS, accessType: AccessTypes.Create })
   @UseGuards(AccessGuard)
   @Post()
   async addHotel(@Body() hotelDto: HotelDto): Promise<HotelEntity> {
@@ -91,7 +91,7 @@ export class HotelsController {
   @ApiNotFoundResponse(updateHotel.ApiNotFoundResponse)
   @ApiInternalServerErrorResponse(updateHotel.ApiInternalServerErrorResponse)
   @UseGuards(JwtAuthGuard)
-  @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Update })
+  @ModuleAccess({ module: Modules.HOTELS, accessType: AccessTypes.Update })
   @UseGuards(AccessGuard)
   @Put(':id')
   async updateHotel(
@@ -109,7 +109,7 @@ export class HotelsController {
   @ApiInternalServerErrorResponse(deleteHotel.ApiInternalServerErrorResponse)
   @HttpCode(StatusCodes.NO_CONTENT)
   @UseGuards(JwtAuthGuard)
-  @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Delete })
+  @ModuleAccess({ module: Modules.HOTELS, accessType: AccessTypes.Delete })
   @UseGuards(AccessGuard)
   @Delete(':id')
   async deleteHotel(@Param('id') id: string): Promise<void> {

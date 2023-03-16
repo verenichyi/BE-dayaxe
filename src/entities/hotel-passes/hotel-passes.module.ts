@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from '../auth/auth.module';
 import { HotelPassesController } from './hotel-passes.controller';
-import { HotelPasses, HotelPassesSchema } from './hotel-passes.schema';
+import { HotelPass, HotelPassSchema } from './hotel-passes.schema';
 import { HotelPassesService } from './hotel-passes.service';
 
 @Module({
@@ -10,7 +10,7 @@ import { HotelPassesService } from './hotel-passes.service';
   providers: [HotelPassesService],
   imports: [
     MongooseModule.forFeature([
-      { name: HotelPasses.name, schema: HotelPassesSchema },
+      { name: HotelPass.name, schema: HotelPassSchema },
     ]),
     AuthModule,
   ],

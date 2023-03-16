@@ -1,7 +1,8 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -12,7 +13,7 @@ import authResponses from '../auth/constants/auth-api';
 import { ModuleAccess } from '../users/access.decorator';
 import { AccessTypes, Modules } from '../users/types/userTypes';
 import responses from './constants/hotel-passes-api';
-import { HotelPassesEntity } from './hotel-passes.entity';
+import { HotelPass } from './hotel-passes.schema';
 import { HotelPassesService } from './hotel-passes.service';
 
 const { UnauthorizedResponse, ForbiddenResponse } = authResponses;
@@ -37,7 +38,20 @@ export class HotelPassesController {
   @ModuleAccess({ module: Modules.HOTEL_PASSES, accessType: AccessTypes.Read })
   @UseGuards(AccessGuard)
   @Get()
-  async getAllHotelPasses(): Promise<HotelPassesEntity[]> {
+  async getAllHotelPasses(): Promise<HotelPass[]> {
     return await this.hotelPassesService.getAllHotelPasses();
+  }
+
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse(UnauthorizedResponse)
+  @ApiForbiddenResponse(ForbiddenResponse)
+  @ApiOkResponse(getHotelPassById.ApiOkResponse)
+  @ApiNotFoundResponse(getHotelPassById.ApiNotFoundResponse)
+  @UseGuards(JwtAuthGuard)
+  @ModuleAccess({ module: Modules.HOTEL_PASSES, accessType: AccessTypes.Read })
+  @UseGuards(AccessGuard)
+  @Get(':id')
+  async getHotelPassById(@Param('id') id: string): Promise<HotelPass> {
+    return await this.hotelPassesService.getHotelPassById(id);
   }
 }

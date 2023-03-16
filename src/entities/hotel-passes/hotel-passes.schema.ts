@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
 @Schema({ versionKey: false })
-export class HotelPasses {
+export class HotelPass {
   @Prop({ type: String, required: true })
   type: string;
 
@@ -28,5 +28,5 @@ export class HotelPasses {
   price: string;
 }
 
-export type HotelPassesDocument = HydratedDocument<HotelPasses>;
-export const HotelPassesSchema = SchemaFactory.createForClass(HotelPasses);
+export type HotelPassDocument = HydratedDocument<HotelPass>;
+export const HotelPassSchema = SchemaFactory.createForClass(HotelPass);

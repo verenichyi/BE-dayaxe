@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -6,13 +7,10 @@ import {
   Param,
   Post,
   Put,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiConsumes,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
@@ -22,8 +20,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { HotelEntity } from './hotel.entity';
 import { HotelsService } from './hotels.service';
 import { StatusCodes } from 'http-status-codes';
@@ -33,21 +29,28 @@ import { ModuleAccess } from '../users/access.decorator';
 import { AccessTypes, Modules } from '../users/types/userTypes';
 import authResponses from '../auth/constants/auth-api';
 import responses from './constants/hotels-api';
+import { HotelDto } from './dto/hotel.dto';
 
 const { UnauthorizedResponse, ForbiddenResponse } = authResponses;
 const { getAllHotels, getHotelById, addHotel, updateHotel, deleteHotel } =
   responses;
 
 @ApiTags('Hotels')
-@ApiBearerAuth()
-@ApiUnauthorizedResponse(UnauthorizedResponse)
-@ApiForbiddenResponse(ForbiddenResponse)
-@UseGuards(JwtAuthGuard)
 @Controller('hotels')
 export class HotelsController {
   constructor(private readonly hotelsService: HotelsService) {}
 
   @ApiOkResponse(getAllHotels.ApiOkResponse)
+  @Get('/public')
+  async getAllHotelsPublic(): Promise<HotelEntity[]> {
+    return await this.hotelsService.getAllHotels();
+  }
+
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse(UnauthorizedResponse)
+  @ApiForbiddenResponse(ForbiddenResponse)
+  @ApiOkResponse(getAllHotels.ApiOkResponse)
+  @UseGuards(JwtAuthGuard)
   @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Read })
   @UseGuards(AccessGuard)
   @Get()
@@ -55,8 +58,12 @@ export class HotelsController {
     return await this.hotelsService.getAllHotels();
   }
 
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse(UnauthorizedResponse)
+  @ApiForbiddenResponse(ForbiddenResponse)
   @ApiOkResponse(getHotelById.ApiOkResponse)
   @ApiNotFoundResponse(getHotelById.ApiNotFoundResponse)
+  @UseGuards(JwtAuthGuard)
   @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Read })
   @UseGuards(AccessGuard)
   @Get(':id')
@@ -64,42 +71,44 @@ export class HotelsController {
     return await this.hotelsService.getHotelById(id);
   }
 
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse(UnauthorizedResponse)
+  @ApiForbiddenResponse(ForbiddenResponse)
   @ApiCreatedResponse(addHotel.ApiCreatedResponse)
   @ApiInternalServerErrorResponse(addHotel.ApiInternalServerErrorResponse)
-  @ApiConsumes('multipart/form-data')
-  @ApiImplicitFile({ name: 'image' })
+  @UseGuards(JwtAuthGuard)
   @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Create })
   @UseGuards(AccessGuard)
-  @UseInterceptors(FileInterceptor('image'))
   @Post()
-  async addHotel(
-    @UploadedFile()
-    image: Express.Multer.File,
-  ): Promise<HotelEntity> {
-    return await this.hotelsService.addHotel(image);
+  async addHotel(@Body() hotelDto: HotelDto): Promise<HotelEntity> {
+    return await this.hotelsService.addHotel(hotelDto);
   }
 
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse(UnauthorizedResponse)
+  @ApiForbiddenResponse(ForbiddenResponse)
   @ApiOkResponse(updateHotel.ApiOkResponse)
   @ApiNotFoundResponse(updateHotel.ApiNotFoundResponse)
   @ApiInternalServerErrorResponse(updateHotel.ApiInternalServerErrorResponse)
-  @ApiConsumes('multipart/form-data')
-  @ApiImplicitFile({ name: 'image' })
+  @UseGuards(JwtAuthGuard)
   @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Update })
   @UseGuards(AccessGuard)
-  @UseInterceptors(FileInterceptor('image'))
   @Put(':id')
   async updateHotel(
     @Param('id') id: string,
-    @UploadedFile()
-    image: Express.Multer.File,
+    @Body() hotelDto: HotelDto,
   ): Promise<HotelEntity> {
-    return await this.hotelsService.updateHotel(id, image);
+    return await this.hotelsService.updateHotel(id, hotelDto);
   }
 
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse(UnauthorizedResponse)
+  @ApiForbiddenResponse(ForbiddenResponse)
   @ApiNoContentResponse()
   @ApiNotFoundResponse(deleteHotel.ApiNotFoundResponse)
   @ApiInternalServerErrorResponse(deleteHotel.ApiInternalServerErrorResponse)
   @HttpCode(StatusCodes.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
   @ModuleAccess({ module: Modules.USERS, accessType: AccessTypes.Delete })
   @UseGuards(AccessGuard)
   @Delete(':id')

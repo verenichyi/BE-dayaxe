@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class HotelPassDto {
   @ApiProperty({
@@ -38,23 +38,23 @@ export class HotelPassDto {
   location: string;
 
   @ApiProperty({
-    example: 5,
+    example: '5',
   })
   @IsNotEmpty()
-  @IsNumber()
-  ratingPercentage: number;
+  @IsString()
+  ratingPercentage: string;
 
   @ApiProperty({
-    example: 128,
+    example: '128',
   })
   @IsNotEmpty()
-  @IsNumber()
-  ratingAmount: number;
+  @IsString()
+  ratingAmount: string;
 
   @ApiProperty({
-    example: 25,
+    example: '25',
   })
   @IsNotEmpty()
-  @IsNumber()
-  price: number;
+  @IsString()
+  price: string;
 }

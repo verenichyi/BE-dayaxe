@@ -31,17 +31,17 @@ export class HotelPassesEntity {
   location: string;
 
   @ApiProperty({
-    example: 5,
+    example: '5',
   })
-  ratingPercentage: number;
+  ratingPercentage: string;
 
   @ApiProperty({
-    example: 128,
+    example: '128',
   })
-  ratingAmount: number;
+  ratingAmount: string;
 
   @ApiProperty({
-    example: 25,
+    example: '$25/guest',
   })
-  price: number;
+  price: string;
 }

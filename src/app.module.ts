@@ -9,6 +9,7 @@ import { HotelsModule } from './entities/hotels/hotels.module';
 import getDefaultUsersDocument from './entities/users/helpers/getDefaultUsersDocument';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { FilesModule } from './entities/files/files.module';
+import { HotelPassesModule } from './entities/hotel-passes/hotel-passes.module';
 
 config();
 
@@ -38,6 +39,7 @@ config();
     AuthModule,
     HotelsModule,
     FilesModule,
+    HotelPassesModule,
   ],
 })
 export class AppModule {}

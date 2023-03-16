@@ -1,12 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Types } from 'mongoose';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class HotelEntity {
-  @ApiProperty({ example: '6407588c77660290910cfd16' })
-  _id: Types.ObjectId;
-
+export class HotelDto {
   @ApiProperty({
     example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAI0AAAB4CAYAAAD',
   })
+  @IsNotEmpty()
+  @IsString()
   image: string;
 }

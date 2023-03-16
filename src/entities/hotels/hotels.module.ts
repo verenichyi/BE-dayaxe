@@ -3,7 +3,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { HotelsController } from './hotels.controller';
 import { HotelsService } from './hotels.service';
 import { Hotel, HotelSchema } from './hotel.schema';
-import { FilesModule } from '../files/files.module';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
@@ -12,7 +11,6 @@ import { AuthModule } from '../auth/auth.module';
   imports: [
     MongooseModule.forFeature([{ name: Hotel.name, schema: HotelSchema }]),
     forwardRef(() => AuthModule),
-    FilesModule,
   ],
 })
 export class HotelsModule {}

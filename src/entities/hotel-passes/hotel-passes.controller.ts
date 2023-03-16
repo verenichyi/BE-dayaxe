@@ -1,7 +1,9 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
@@ -13,6 +15,7 @@ import authResponses from '../auth/constants/auth-api';
 import { ModuleAccess } from '../users/access.decorator';
 import { AccessTypes, Modules } from '../users/types/userTypes';
 import responses from './constants/hotel-passes-api';
+import { HotelPassDto } from './dto/hotel-passes.dto';
 import { HotelPass } from './hotel-passes.schema';
 import { HotelPassesService } from './hotel-passes.service';
 
@@ -53,5 +56,21 @@ export class HotelPassesController {
   @Get(':id')
   async getHotelPassById(@Param('id') id: string): Promise<HotelPass> {
     return await this.hotelPassesService.getHotelPassById(id);
+  }
+
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse(UnauthorizedResponse)
+  @ApiForbiddenResponse(ForbiddenResponse)
+  @ApiCreatedResponse(addHotelPass.ApiCreatedResponse)
+  @ApiInternalServerErrorResponse(addHotelPass.ApiInternalServerErrorResponse)
+  @UseGuards(JwtAuthGuard)
+  @ModuleAccess({
+    module: Modules.HOTEL_PASSES,
+    accessType: AccessTypes.Create,
+  })
+  @UseGuards(AccessGuard)
+  @Post()
+  async addHotelPass(@Body() hotelPassDto: HotelPassDto): Promise<HotelPass> {
+    return await this.hotelPassesService.addHotelPass(hotelPassDto);
   }
 }

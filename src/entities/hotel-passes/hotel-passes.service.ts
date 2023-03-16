@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { isIdValid } from '../users/helpers/validation';
 import exceptions from './constants/exceptions';
+import { HotelPassDto } from './dto/hotel-passes.dto';
 import { HotelPass, HotelPassDocument } from './hotel-passes.schema';
 
 @Injectable()
@@ -25,5 +26,10 @@ export class HotelPassesService {
     }
 
     return hotelPass;
+  }
+
+  async addHotelPass(hotelPassDto: HotelPassDto): Promise<HotelPass> {
+    const hotel = await new this.hotelPassModel(hotelPassDto);
+    return hotel.save();
   }
 }

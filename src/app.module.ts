@@ -6,6 +6,7 @@ import { UsersModule } from './entities/users/users.module';
 import { AuthModule } from './entities/auth/auth.module';
 import { HotelsModule } from './entities/hotels/hotels.module';
 import getDefaultUsersDocument from './entities/users/helpers/getDefaultUsersDocument';
+import { HotelPassesModule } from './entities/hotel-passes/hotel-passes.module';
 
 config();
 
@@ -31,6 +32,7 @@ config();
     UsersModule,
     AuthModule,
     HotelsModule,
+    HotelPassesModule,
   ],
 })
 export class AppModule {}

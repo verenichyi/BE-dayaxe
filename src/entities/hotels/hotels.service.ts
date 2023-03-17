@@ -34,6 +34,7 @@ export class HotelsService {
   }
 
   async updateHotel(id: string, hotelDto: HotelDto): Promise<HotelEntity> {
+    isIdValid(id);
     const updatedHotel = await this.hotelModel.findByIdAndUpdate(id, hotelDto, {
       new: true,
     });

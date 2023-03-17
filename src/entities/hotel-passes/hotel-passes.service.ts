@@ -37,6 +37,7 @@ export class HotelPassesService {
     id: string,
     hotelPassDto: HotelPassDto,
   ): Promise<HotelPass> {
+    isIdValid(id);
     const updatedHotelPass = await this.hotelPassModel.findByIdAndUpdate(
       id,
       hotelPassDto,

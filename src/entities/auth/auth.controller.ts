@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiOkResponse,
@@ -32,6 +33,7 @@ const { login, UnauthorizedResponse, registration } = authResponses;
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('/check')
   async checkAuth(@Req() request: Request & { user: UserPayloadEntity }) {

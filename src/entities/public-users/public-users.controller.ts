@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseInterceptors,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -13,6 +20,7 @@ import responses from './constants/public-user-api';
 import authResponses from '../auth/constants/auth-api';
 import { PublicUsersService } from './public-users.service';
 import { PublicUserEntity } from './public-user.entity';
+import { PublicUserInterceptor } from 'src/interceptors/public-user.interceptor';
 
 const { getAllUsers, getUserById, createUser } = responses;
 
@@ -20,6 +28,7 @@ const { UnauthorizedResponse } = authResponses;
 
 @ApiTags('Public Users')
 @ApiUnauthorizedResponse(UnauthorizedResponse)
+@UseInterceptors(PublicUserInterceptor)
 @Controller('public-users')
 export class PublicUsersController {
   constructor(private readonly usersService: PublicUsersService) {}

@@ -1,6 +1,15 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiOkResponse,
@@ -8,7 +17,9 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { StatusCodes } from 'http-status-codes';
+import { JwtPublicAuthGuard } from 'src/guards/jwt-public-auth.guard';
 import responses from '../public-users/constants/public-user-api';
+import { PublicUserPayloadEntity } from '../public-users/public-user-payload.entity';
 import publicAuthResponses from './constants/public-auth-api';
 import { LoginUserDto } from './dto/login-public-user.dto';
 import { RegisterUserDto } from './dto/register-public-user.dto';
@@ -21,6 +32,13 @@ const { login, UnauthorizedResponse, registration } = publicAuthResponses;
 @Controller('public-auth')
 export class PublicAuthController {
   constructor(private readonly publicAuthService: PublicAuthService) {}
+
+  @ApiBearerAuth()
+  @UseGuards(JwtPublicAuthGuard)
+  @Get('/check')
+  async checkAuth(@Req() request: Request & { user: PublicUserPayloadEntity }) {
+    return await this.publicAuthService.checkAuth(request.user);
+  }
 
   @HttpCode(StatusCodes.OK)
   @ApiOkResponse(login.ApiOkResponse)

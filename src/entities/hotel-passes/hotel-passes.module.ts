@@ -14,5 +14,6 @@ import { HotelPassesService } from './hotel-passes.service';
     ]),
     AuthModule,
   ],
+  exports: [HotelPassesService],
 })
 export class HotelPassesModule {}

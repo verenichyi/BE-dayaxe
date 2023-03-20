@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -13,6 +17,7 @@ import exceptions from './constants/exceptions';
 import { CreatePublicUserDto } from './dto/create-public-user.dto';
 import { PublicUserEntity } from './public-user.entity';
 import { PublicUser, PublicUserDocument } from './public-user.schema';
+import { HotelPassesService } from '../hotel-passes/hotel-passes.service';
 
 const { NotFound } = exceptions;
 config();
@@ -22,6 +27,7 @@ export class PublicUsersService {
   constructor(
     @InjectModel(PublicUser.name)
     private publicUserModel: Model<PublicUserDocument>,
+    private hotelPassesService: HotelPassesService,
   ) {}
 
   async getAll(): Promise<PublicUserEntity[]> {
@@ -32,7 +38,6 @@ export class PublicUsersService {
     isIdValid(userId);
 
     const user = await this.publicUserModel.findById(userId);
-
     if (!user) {
       throw new NotFoundException(NotFound);
     }
@@ -62,5 +67,55 @@ export class PublicUsersService {
 
   async getUserByEmail(email: string): Promise<PublicUserEntity> {
     return await this.publicUserModel.findOne({ email });
+  }
+
+  async addHotelPassToFavorites(
+    userId: string,
+    hotelPassId: string,
+  ): Promise<PublicUserEntity> {
+    isIdValid(userId);
+    isIdValid(hotelPassId);
+
+    const user = await this.publicUserModel.findOne({ _id: userId });
+    if (!user) {
+      throw new NotFoundException(NotFound);
+    }
+
+    const hotelPass = await this.hotelPassesService.getHotelPassById(
+      hotelPassId,
+    );
+    if (!hotelPass) {
+      throw new UnprocessableEntityException();
+    }
+
+    user.favoriteHotelPasses.push(hotelPassId);
+
+    return user.save();
+  }
+
+  async deleteHotelPassFomFavorites(
+    userId: string,
+    hotelPassId: string,
+  ): Promise<PublicUserEntity> {
+    isIdValid(userId);
+    isIdValid(hotelPassId);
+
+    const user = await this.publicUserModel.findOne({ _id: userId });
+    if (!user) {
+      throw new NotFoundException(NotFound);
+    }
+
+    const hotelPass = await this.hotelPassesService.getHotelPassById(
+      hotelPassId,
+    );
+    if (!hotelPass) {
+      throw new UnprocessableEntityException();
+    }
+
+    return await this.publicUserModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { favoriteHotelPasses: hotelPassId } },
+      { new: true },
+    );
   }
 }

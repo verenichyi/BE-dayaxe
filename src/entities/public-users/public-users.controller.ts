@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,6 +22,7 @@ import authResponses from '../auth/constants/auth-api';
 import { PublicUsersService } from './public-users.service';
 import { PublicUserEntity } from './public-user.entity';
 import { PublicUserInterceptor } from 'src/interceptors/public-user.interceptor';
+import { FavoriteHotelPassDto } from './dto/favorite-hotel-pass.dto';
 
 const { getAllUsers, getUserById, createUser } = responses;
 
@@ -55,5 +57,27 @@ export class PublicUsersController {
     @Body() body: CreatePublicUserDto,
   ): Promise<PublicUserEntity> {
     return await this.usersService.createUser(body);
+  }
+
+  @Patch('favorite-hotel-pass/:userId/add')
+  async addHotelPassToFavorites(
+    @Param('userId') userId: string,
+    @Body() body: FavoriteHotelPassDto,
+  ): Promise<PublicUserEntity> {
+    return await this.usersService.addHotelPassToFavorites(
+      userId,
+      body.hotelPassId,
+    );
+  }
+
+  @Patch('favorite-hotel-pass/:userId/delete')
+  async deleteHotelPassFomFavorites(
+    @Param('userId') userId: string,
+    @Body() body: FavoriteHotelPassDto,
+  ): Promise<PublicUserEntity> {
+    return await this.usersService.deleteHotelPassFomFavorites(
+      userId,
+      body.hotelPassId,
+    );
   }
 }

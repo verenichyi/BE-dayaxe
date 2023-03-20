@@ -22,16 +22,16 @@ export class PublicAuthService {
 
   async login(loginDto: LoginUserDto) {
     const user = await this.validateUser(loginDto);
-    const { _id, email, username } = user;
-    const payload = { _id, email, username };
+    const { _id, email, username, favoriteHotelPasses } = user;
+    const payload = { _id, email, username, favoriteHotelPasses };
     return this.generateToken(payload);
   }
 
   async registration(registerDto: RegisterUserDto) {
     const user = await this.publicUsersService.createUser(registerDto);
 
-    const { _id, email, username } = user;
-    const payload = { _id, email, username };
+    const { _id, email, username, favoriteHotelPasses } = user;
+    const payload = { _id, email, username, favoriteHotelPasses };
 
     return this.generateToken(payload);
   }

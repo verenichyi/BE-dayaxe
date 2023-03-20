@@ -13,13 +13,13 @@ export class PublicUserInterceptor implements NestInterceptor {
       map((data) => {
         if (Array.isArray(data)) {
           return data.map((user) => {
-            const { _id, email, username } = user;
-            return { _id, email, username };
+            const { _id, email, username, favoriteHotelPasses } = user;
+            return { _id, email, username, favoriteHotelPasses };
           });
         }
 
-        const { _id, email, username } = data;
-        return { _id, email, username };
+        const { _id, email, username, favoriteHotelPasses } = data;
+        return { _id, email, username, favoriteHotelPasses };
       }),
     );
   }

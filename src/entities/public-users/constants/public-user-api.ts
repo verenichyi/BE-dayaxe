@@ -1,8 +1,14 @@
 import { PublicUserEntity } from '../public-user.entity';
 import exceptions from './exceptions';
 
-const { InvalidIdBadRequest, InvalidBodyBadRequest, NotFound, Conflict } =
-  exceptions;
+const {
+  UnprocessableEntity,
+  InvalidFavoriteBodyBadRequest,
+  InvalidIdBadRequest,
+  InvalidBodyBadRequest,
+  NotFound,
+  Conflict,
+} = exceptions;
 
 const responses = {
   getAllUsers: {
@@ -15,14 +21,12 @@ const responses = {
         type: 'object',
         example: NotFound,
       },
-      description: 'User was not found',
     },
     ApiBadRequestResponse: {
       schema: {
         type: 'object',
         example: InvalidIdBadRequest,
       },
-      description: 'Invalid userId',
     },
   },
   createUser: {
@@ -32,54 +36,46 @@ const responses = {
         type: 'object',
         example: InvalidBodyBadRequest,
       },
-      description: 'Invalid body',
     },
     ApiConflictResponse: {
       schema: {
         type: 'object',
         example: Conflict,
       },
-      description: 'Conflicting Request',
     },
   },
   deleteUser: {
     ApiOkResponse: {
       type: PublicUserEntity,
-      description: 'User was successfully deleted',
     },
     ApiNotFoundResponse: {
       schema: {
         type: 'object',
         example: NotFound,
       },
-      description: 'User was not found',
     },
     ApiBadRequestResponse: {
       schema: {
         type: 'object',
         example: InvalidIdBadRequest,
       },
-      description: 'Invalid userId',
     },
   },
   updateUser: {
     ApiOkResponse: {
       type: PublicUserEntity,
-      description: 'User has been  successfully updated',
     },
     ApiNotFoundResponse: {
       schema: {
         type: 'object',
         example: NotFound,
       },
-      description: 'User was not found',
     },
     ApiBadRequestResponse: {
       schema: {
         type: 'object',
         example: InvalidBodyBadRequest,
       },
-      description: 'Invalid body',
     },
     ApiConflictResponse: {
       schema: {
@@ -87,6 +83,29 @@ const responses = {
         example: Conflict,
       },
       description: 'Conflicting Request',
+    },
+  },
+  favoriteHotelPasses: {
+    ApiOkResponse: {
+      type: PublicUserEntity,
+    },
+    ApiNotFoundResponse: {
+      schema: {
+        type: 'object',
+        example: NotFound,
+      },
+    },
+    ApiBadRequestResponse: {
+      schema: {
+        type: 'object',
+        example: InvalidFavoriteBodyBadRequest,
+      },
+    },
+    ApiUnprocessableEntityResponse: {
+      schema: {
+        type: 'object',
+        example: UnprocessableEntity,
+      },
     },
   },
 };

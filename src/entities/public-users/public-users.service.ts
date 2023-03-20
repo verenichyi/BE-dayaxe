@@ -19,7 +19,7 @@ import { PublicUserEntity } from './public-user.entity';
 import { PublicUser, PublicUserDocument } from './public-user.schema';
 import { HotelPassesService } from '../hotel-passes/hotel-passes.service';
 
-const { NotFound } = exceptions;
+const { NotFound, UnprocessableEntity } = exceptions;
 config();
 
 @Injectable()
@@ -85,7 +85,7 @@ export class PublicUsersService {
       hotelPassId,
     );
     if (!hotelPass) {
-      throw new UnprocessableEntityException();
+      throw new UnprocessableEntityException(UnprocessableEntity);
     }
 
     user.favoriteHotelPasses.push(hotelPassId);
@@ -109,7 +109,7 @@ export class PublicUsersService {
       hotelPassId,
     );
     if (!hotelPass) {
-      throw new UnprocessableEntityException();
+      throw new UnprocessableEntityException(UnprocessableEntity);
     }
 
     return await this.publicUserModel.findOneAndUpdate(

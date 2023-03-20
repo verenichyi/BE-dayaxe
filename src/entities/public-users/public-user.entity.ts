@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Types } from 'mongoose';
-import { HotelPass } from '../hotel-passes/hotel-passes.schema';
 
 export class PublicUserEntity {
   @ApiProperty({ example: '6407588c77660290910cfd16' })
@@ -15,5 +14,6 @@ export class PublicUserEntity {
   @ApiProperty({ example: '1234qaz' })
   password: string;
 
+  @ApiProperty({ example: '6407588c77660290910cfd16', isArray: true })
   favoriteHotelPasses: string[];
 }

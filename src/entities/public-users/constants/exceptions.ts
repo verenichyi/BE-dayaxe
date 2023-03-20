@@ -14,6 +14,13 @@ const exceptions = {
     ],
     error: 'Bad Request',
   },
+  InvalidFavoriteBodyBadRequest: {
+    status: 400,
+    message: [
+      'hotelPassId: hotelPassId should not be empty, hotelPassId must be a string',
+    ],
+    error: 'Bad Request',
+  },
   NotFound: {
     status: 404,
     message: 'User not found',
@@ -23,6 +30,11 @@ const exceptions = {
     status: 409,
     message: 'User with the same username or email already exists',
     error: 'Conflict',
+  },
+  UnprocessableEntity: {
+    status: 422,
+    message: "Specified hotel pass doesn't exist",
+    error: 'Unprocessable Entity',
   },
 };
 

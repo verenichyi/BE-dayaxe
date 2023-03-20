@@ -14,22 +14,18 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
+  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { CreatePublicUserDto } from './dto/create-public-user.dto';
 import responses from './constants/public-user-api';
-import authResponses from '../auth/constants/auth-api';
 import { PublicUsersService } from './public-users.service';
 import { PublicUserEntity } from './public-user.entity';
 import { PublicUserInterceptor } from 'src/interceptors/public-user.interceptor';
 import { FavoriteHotelPassDto } from './dto/favorite-hotel-pass.dto';
 
-const { getAllUsers, getUserById, createUser } = responses;
-
-const { UnauthorizedResponse } = authResponses;
+const { getAllUsers, getUserById, createUser, favoriteHotelPasses } = responses;
 
 @ApiTags('Public Users')
-@ApiUnauthorizedResponse(UnauthorizedResponse)
 @UseInterceptors(PublicUserInterceptor)
 @Controller('public-users')
 export class PublicUsersController {
@@ -59,6 +55,12 @@ export class PublicUsersController {
     return await this.usersService.createUser(body);
   }
 
+  @ApiCreatedResponse(favoriteHotelPasses.ApiOkResponse)
+  @ApiNotFoundResponse(favoriteHotelPasses.ApiNotFoundResponse)
+  @ApiBadRequestResponse(favoriteHotelPasses.ApiBadRequestResponse)
+  @ApiUnprocessableEntityResponse(
+    favoriteHotelPasses.ApiUnprocessableEntityResponse,
+  )
   @Patch('favorite-hotel-pass/:userId/add')
   async addHotelPassToFavorites(
     @Param('userId') userId: string,
@@ -70,6 +72,12 @@ export class PublicUsersController {
     );
   }
 
+  @ApiCreatedResponse(favoriteHotelPasses.ApiOkResponse)
+  @ApiNotFoundResponse(favoriteHotelPasses.ApiNotFoundResponse)
+  @ApiBadRequestResponse(favoriteHotelPasses.ApiBadRequestResponse)
+  @ApiUnprocessableEntityResponse(
+    favoriteHotelPasses.ApiUnprocessableEntityResponse,
+  )
   @Patch('favorite-hotel-pass/:userId/delete')
   async deleteHotelPassFomFavorites(
     @Param('userId') userId: string,

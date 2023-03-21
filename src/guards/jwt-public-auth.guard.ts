@@ -34,8 +34,13 @@ export class JwtPublicAuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET_KEY,
       });
 
-      const { _id, email, username } = user;
-      req.user = { _id, email, username } as PublicUserPayloadEntity;
+      const { _id, email, username, favoriteHotelPasses } = user;
+      req.user = {
+        _id,
+        email,
+        username,
+        favoriteHotelPasses,
+      } as PublicUserPayloadEntity;
 
       return true;
     } catch (error) {

@@ -36,7 +36,7 @@ export class PublicAuthService {
     return this.generateToken(payload);
   }
 
-  private async generateToken(payload: PublicUserPayloadEntity) {
+  private async generateToken(payload) {
     return {
       token: this.jwtService.sign(payload, {
         secret: process.env.JWT_SECRET_KEY,
@@ -46,8 +46,11 @@ export class PublicAuthService {
     };
   }
 
-  async checkAuth(user: PublicUserPayloadEntity) {
-    return await this.generateToken(user);
+  async checkAuth(userPayload: PublicUserPayloadEntity) {
+    const user = await this.publicUsersService.findById(userPayload._id);
+    const { _id, email, username, favoriteHotelPasses } = user;
+    const payload = { _id, email, username, favoriteHotelPasses };
+    return await this.generateToken(payload);
   }
 
   private async validateUser(userDto: LoginUserDto): Promise<PublicUserEntity> {

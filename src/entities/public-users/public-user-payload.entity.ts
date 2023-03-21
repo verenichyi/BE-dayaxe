@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 export class PublicUserPayloadEntity {
-  _id: Types.ObjectId;
+  _id: string;
   username: string;
   email: string;
   favoriteHotelPasses: string[];

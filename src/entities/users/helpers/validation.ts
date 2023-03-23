@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { UserDocument } from '../user.schema';
 import exceptions from '../constants/exceptions';
+import { PublicUserDocument } from 'src/entities/public-users/public-user.schema';
 
 const { InvalidIdBadRequest, Conflict } = exceptions;
 
@@ -14,7 +15,7 @@ export function isIdValid(id: string): void | never {
 export async function checkUserForDatabaseMatches(
   username: string,
   email: string,
-  userModel: Model<UserDocument>,
+  userModel: Model<UserDocument | PublicUserDocument>,
   userId?: string,
 ): Promise<void | never> {
   const userByName = await userModel.findOne({

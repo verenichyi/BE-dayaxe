@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -38,12 +39,27 @@ const {
   addHotelPass,
   updateHotelPass,
   deleteHotelPass,
+  searchHotels,
 } = responses;
 
 @ApiTags('Hotels-Passes')
 @Controller('hotel-passes')
 export class HotelPassesController {
   constructor(private readonly hotelPassesService: HotelPassesService) {}
+
+  @ApiOkResponse(searchHotels.ApiOkResponse)
+  @Get('/search')
+  async searchHotels(
+    @Query('location') location: string,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ): Promise<HotelPass[]> {
+    return await this.hotelPassesService.searchHotels(
+      location,
+      startDate,
+      endDate,
+    );
+  }
 
   @ApiOkResponse(getAllHotelPasses.ApiOkResponse)
   @Get('/public')

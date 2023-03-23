@@ -9,6 +9,7 @@ import getDefaultUsersDocument from './entities/users/helpers/getDefaultUsersDoc
 import { HotelPassesModule } from './entities/hotel-passes/hotel-passes.module';
 import { PublicAuthModule } from './entities/public-auth/public-auth.module';
 import { PublicUsersModule } from './entities/public-users/public-users.module';
+import hotelPasses from './entities/hotel-passes/constants/mock-data';
 
 config();
 
@@ -26,6 +27,13 @@ config();
         if (usersAmount === 0) {
           const document = await getDefaultUsersDocument();
           await usersCollection.insertOne(document);
+        }
+
+        const hotelPassesCollection = connection.db.collection('hotelpasses');
+        const hotelPassesAmount = await hotelPassesCollection.countDocuments();
+
+        if (hotelPassesAmount === 0) {
+          await hotelPassesCollection.insertMany(hotelPasses);
         }
 
         return connection;

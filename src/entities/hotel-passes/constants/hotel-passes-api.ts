@@ -4,6 +4,9 @@ import { HotelPassesEntity } from '../hotel-passes.entity';
 const { NotFound, InternalServerError } = exceptions;
 
 const responses = {
+  searchHotels: {
+    ApiOkResponse: { type: HotelPassesEntity, isArray: true },
+  },
   getAllHotelPasses: {
     ApiOkResponse: { type: HotelPassesEntity, isArray: true },
   },

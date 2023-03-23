@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as moment from 'moment';
 import { isIdValid } from '../users/helpers/validation';
 import exceptions from './constants/exceptions';
 import { HotelPassDto } from './dto/hotel-passes.dto';
@@ -12,6 +13,32 @@ export class HotelPassesService {
     @InjectModel(HotelPass.name)
     private hotelPassModel: Model<HotelPassDocument>,
   ) {}
+
+  async searchHotels(
+    location: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<HotelPass[]> {
+    return this.hotelPassModel.aggregate([
+      {
+        $match: {
+          location,
+          startDate: {
+            $lte: moment(startDate)
+              .set({ hours: 0, minutes: 0, seconds: 0 })
+              .utc()
+              .toDate(),
+          },
+          endDate: {
+            $gt: moment(endDate)
+              .set({ hours: 23, minutes: 59, seconds: 59 })
+              .utc()
+              .toDate(),
+          },
+        },
+      },
+    ]);
+  }
 
   async getAllHotelPasses(): Promise<HotelPass[]> {
     return await this.hotelPassModel.find();

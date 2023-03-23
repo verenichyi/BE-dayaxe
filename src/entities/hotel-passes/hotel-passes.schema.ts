@@ -26,6 +26,16 @@ export class HotelPass {
 
   @Prop({ type: String, required: true })
   price: string;
+
+  @Prop({
+    type: Date,
+  })
+  startDate: Date;
+
+  @Prop({
+    type: Date,
+  })
+  endDate: Date;
 }
 
 export type HotelPassDocument = HydratedDocument<HotelPass>;

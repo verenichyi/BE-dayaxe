@@ -22,19 +22,17 @@ export class HotelPassesService {
     return this.hotelPassModel.aggregate([
       {
         $match: {
-          location,
-          startDate: {
-            $lte: moment(startDate)
-              .set({ hours: 0, minutes: 0, seconds: 0 })
-              .utc()
-              .toDate(),
-          },
-          endDate: {
-            $gt: moment(endDate)
-              .set({ hours: 23, minutes: 59, seconds: 59 })
-              .utc()
-              .toDate(),
-          },
+          $or: [
+            { location },
+            {
+              startDate: {
+                $lte: moment(startDate).utc().toDate(),
+              },
+              endDate: {
+                $gt: moment(endDate).utc().toDate(),
+              },
+            },
+          ],
         },
       },
     ]);
